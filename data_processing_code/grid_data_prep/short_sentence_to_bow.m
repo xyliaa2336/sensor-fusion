@@ -1,0 +1,13 @@
+function vec = short_sentence_to_bow(short_string)
+full_sentence = short_sentence_to_full(short_string);
+all_words = {'bin', 'lay', 'place', 'set', 'blue', 'green', 'red', 'white',...
+             'at', 'by', 'in', 'with', 'a', 'c', 'b', 'e', 'd', 'g', 'f', ...
+             'i', 'h', 'k', 'j', 'm', 'l', 'o', 'n', 'q', 'p', 's', 'r', ...
+             'u', 't', 'v', 'y', 'x', 'z', '1', '2', '3', '4', '5', '6', ...
+             '7', '8', '9', 'zero', 'again', 'now', 'please', 'soon'};
+vec = single(zeros(1, numel(all_words)));
+for word_idx =1:numel(full_sentence)
+    position = find(strcmp(full_sentence{word_idx}, all_words));
+    vec(position) = 1;
+end
+end
