@@ -1,16 +1,23 @@
 %%
 clear all;close all; clc
-pathname='F:\hw_grid_DVS_part4\';
+pathname='D:\lipreading_data\sentences_cochlp_all\005\';
 
 fprintf('...loading data...\n')
-
-%%
-filenames=ls([pathname]);
-filenames=filenames(3:end,:);
-
-disp('Loading retina data file (events)...');
-%[x,y,pol,allTs_ret] = getDVSeventsDavis([basefil '_ret.aedat']); % Spikes
-for i =1:length(filenames)
-    [x,y,pol,allTs_ret] = getDVSeventsDavis([pathname,filenames(i,:)]); 
-    save(['F:\hw_grid_DVS_part4_mat\',filenames(i,1:end-6),'.mat'],'x','y','pol','allTs_ret');
+for i=1:3
+    d = dir([pathname,num2str(i)]);
+    isub = [d(:).isdir]; %# returns logical vector
+    nameFolds = {d(isub).name}';
+    nameFolds(ismember(nameFolds,{'.','..'})) = [];
+    for j=1:length(nameFolds)
+        DVS_name=ls([pathname,num2str(i),'\',nameFolds{j},'\DAVIS*']);
+        [x,y,pol,allTs_ret] = getDVSeventsDavis([pathname,num2str(i),'\',nameFolds{j},'\',DVS_name]); 
+        shortnames= strsplit(nameFolds{j},'_');
+        shortname='';
+        for k=1:length(shortnames)
+            shortname=[shortname,shortnames{k}(1)];
+        end
+        save([pathname,'\mats\',shortname,'_ret.mat'],'x','y','pol','allTs_ret');
+    end
 end
+
+

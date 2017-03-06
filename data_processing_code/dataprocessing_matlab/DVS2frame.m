@@ -1,13 +1,13 @@
 %make DVS binned frames
-rootpath='F:\DVS_frames_40_norm_part4\';
-
-ret_list=ls(['F:\hw_grid_DVS_part4_mat\','s*.mat']);
+rootpath='D:\lipreading_data\sentences_cochlp_all\DVS_40_on-off_normed\';
+source_dir='D:\lipreading_data\sentences_cochlp_all\005\mats\';
+ret_list=ls([source_dir,'*_ret.mat']);
 time_window=40e-3;
 xrange=[39,218];
 yrange=[0,179];
 dummy=0;
 for i=1:size(ret_list,1)
-   load(['F:\hw_grid_DVS_part4_mat\',ret_list(i,:)]);
+   load([source_dir,ret_list(i,:)]);
    allTs_ret=double(allTs_ret)/1e6-0.5;
    ind=find(allTs_ret>0);
    allTs_ret=allTs_ret(ind);
@@ -15,7 +15,7 @@ for i=1:size(ret_list,1)
    time_steps=1:floor((max(allTs_ret)-min(allTs_ret))/time_window);
    if(length(time_steps)>1000)
        fprintf('abnormal file at %i',i);
-       movefile(['F:\hw_grid_DVS_part4_mat\',ret_list(i,:)],['F:\hw_grid_DVS_part4_mat\abnormal_files\',ret_list(i,:)]);
+       movefile([source_dir,ret_list(i,:)],[source_dir,'abnormal_files\',ret_list(i,:)]);
        %movefile(['D:\lipread_data\hw_grid_mat\',ret_list(i,1:9),'_cochLP.mat'],['F:\hw_grid_mat\abnormal_files\',ret_list(i,1:9),'_cochLP.mat']);
        continue
    end
@@ -42,8 +42,8 @@ for i=1:size(ret_list,1)
        DVS_frames(:,:,time_steps(j))=flipud(DVS_frames(:,:,time_steps(j)));
        DVS_frames_resized(:,:,time_steps(j))=imresize(DVS_frames(:,:,time_steps(j)),[48,48]);
    end
-   save([rootpath,ret_list(i,1:10),'_DVSframes.mat'],'DVS_frames');
-   save([rootpath,ret_list(i,1:10),'_DVSframes_resized.mat'],'DVS_frames_resized');
+   save([rootpath,'rs5-',ret_list(i,1:6),'_DVSframes.mat'],'DVS_frames');
+   save([rootpath,'rs5-', ret_list(i,1:6),'_DVSframes_resized.mat'],'DVS_frames_resized');
    %normalization. Only on resized frames to save some time
    DVS_normed=DVS_frames_resized;
    flatten_DVS=reshape(DVS_frames_resized,[],1);
@@ -52,7 +52,7 @@ for i=1:size(ret_list,1)
    DVS_normed(DVS_frames_resized~=0)=DVS_frames_resized(DVS_frames_resized~=0)-mean_nz;
    DVS_normed(DVS_frames_resized~=0)=DVS_normed(DVS_frames_resized~=0)/std_nz;
    
-   save([rootpath,ret_list(i,1:10),'_DVSframes_normed.mat'],'DVS_normed');
+   save([rootpath,'rs5-',ret_list(i,1:6),'_DVSframes_normed.mat'],'DVS_normed');
    
    clear DVS_frames;
    clear DVS_frames_resized;
